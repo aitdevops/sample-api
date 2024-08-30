@@ -157,3 +157,4 @@ cython_debug/
 .vscode/
 
 generate-models.sh
+poetry.lock
