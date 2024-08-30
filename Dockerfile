@@ -1,6 +1,9 @@
 # Use a compatible Python version as specified in pyproject.toml
 FROM python:3.12-slim
 
+# Create a non-root user
+RUN useradd -m myuser
+
 # Install PostgreSQL development headers and build tools
 RUN apt-get update && apt-get install -y \
     libpq-dev gcc \
@@ -12,10 +15,14 @@ WORKDIR /app
 # Copy the pyproject.toml and poetry.lock files into the container
 COPY pyproject.toml poetry.lock /app/
 
+# Change to the non-root user
+USER myuser
+
 # Install Poetry
-RUN pip install poetry
+RUN pip install --user poetry
 
 # Configure Poetry to install dependencies globally
+ENV PATH="/home/myuser/.local/bin:$PATH"
 RUN poetry config virtualenvs.create false
 
 # Install dependencies using Poetry
