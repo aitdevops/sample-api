@@ -20,12 +20,12 @@ USER myuser
 # Install Poetry
 RUN pip install --user poetry
 
-# Configure Poetry to install dependencies globally
+# Configure Poetry to install dependencies in the user's home directory
 ENV PATH="/home/myuser/.local/bin:$PATH"
-RUN poetry config virtualenvs.create false
+RUN poetry config virtualenvs.create true
 
 # Install dependencies using Poetry
-RUN poetry install --no-root
+RUN poetry install
 
 # Copy the rest of the application code
 COPY . /app/
@@ -34,4 +34,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Command to run the FastAPI application using Uvicorn
-CMD ["uvicorn", "src.sample_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "uvicorn", "src.sample_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
