@@ -42,7 +42,7 @@ jobs:
       run: poetry run pytest
 
     - name: Build Docker image
-      run: docker build --platform ${{ matrix.platform }} -t sample-api:${{ github.sha }} .
+      run: docker build --platform ${{ matrix.platform }} -t ghcr.io/${{ github.repository }}/sample-api:${{ github.sha }} .
 
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v2
