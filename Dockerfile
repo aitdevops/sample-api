@@ -1,8 +1,7 @@
-# Use a compatible Python version as specified in pyproject.toml
-FROM python:3.12-slim
+FROM --platform=linux/amd64 python:3.12-slim
 
 # Create a non-root user
-RUN useradd -m myuser
+RUN addgroup --system myuser && adduser --system --ingroup myuser --home /home/myuser myuser
 
 # Install PostgreSQL development headers and build tools
 RUN apt-get update && apt-get install -y \
@@ -15,7 +14,7 @@ WORKDIR /app
 # Copy the pyproject.toml and poetry.lock files into the container
 COPY pyproject.toml poetry.lock /app/
 
-# Change to the non-root user
+# Switch to the non-root user
 USER myuser
 
 # Install Poetry
