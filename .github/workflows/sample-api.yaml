@@ -1,5 +1,6 @@
 name: CI Pipeline
 
+# The workflow is triggered on every push to the 'main' branch.
 on:
   push:
     branches:
@@ -7,49 +8,49 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # The workflow runs on the latest Ubuntu environment provided by GitHub Actions.
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:13  # Spins up a PostgreSQL 13 service for the duration of the workflow, useful if your tests need a database.
         ports:
-          - 5432:5432
+          - 5432:5432  # Exposes port 5432, the default port for PostgreSQL.
         env:
-          POSTGRES_DB: sample_db
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: sample_db  # Sets the name of the default database.
+          POSTGRES_USER: user  # Sets the database username.
+          POSTGRES_PASSWORD: password  # Sets the database password.
 
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
+        platform: [linux/amd64, linux/arm64]  # Builds the Docker image for both amd64 and arm64 architectures.
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2  # Checks out the latest code from the repository.
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v2  # Sets up the Python environment.
       with:
-        python-version: '3.12'
+        python-version: '3.12'  # Specifies Python version 3.12.
 
     - name: Install Poetry
-      run: pip install poetry
+      run: pip install poetry  # Installs Poetry, the dependency manager for Python projects.
 
     - name: Install dependencies
-      run: poetry install
+      run: poetry install  # Installs the project dependencies as specified in pyproject.toml using Poetry.
 
     - name: Run unit tests
-      run: poetry run pytest
+      run: poetry run pytest  # Runs the unit tests using pytest, ensuring the code is working as expected.
 
     - name: Build Docker image
-      run: docker build --platform ${{ matrix.platform }} -t ghcr.io/${{ github.repository }}/sample-api:${{ github.sha }} .
+      run: docker build --platform ${{ matrix.platform }} -t ghcr.io/${{ github.repository }}/sample-api:${{ github.sha }} .  # Builds the Docker image and tags it with the commit SHA for the specific platform (amd64 or arm64).
 
     - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v2  # Logs in to GitHub Container Registry using a Personal Access Token (PAT) stored in GitHub Secrets.
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GH_TOKEN }}
+        username: ${{ github.actor }}  # Uses the GitHub username of the actor triggering the workflow.
+        password: ${{ secrets.GH_TOKEN }}  # Uses the PAT stored in GitHub Secrets.
 
     - name: Push Docker image to GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository }}/sample-api:${{ github.sha }}
+      run: docker push ghcr.io/${{ github.repository }}/sample-api:${{ github.sha }}  # Pushes the built Docker image to the GitHub Container Registry.
