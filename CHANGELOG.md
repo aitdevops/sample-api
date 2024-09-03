@@ -1,5 +1,5 @@
 # Changelog
-
+### Question-1
 ### Added
 - **Dockerfile**: Added a Dockerfile to the root of the repository to containerize the FastAPI application (`sample-api`). This Dockerfile sets up the environment required to run the application within a Docker container.
   
@@ -12,6 +12,7 @@
     - The application code is copied into the container, and Uvicorn is configured to serve the FastAPI application on port 8000.
     - The container exposes port 8000, allowing the application to be accessed externally.
 
+### Question-2
 ### Added
 - **GitHub Workflow file**: Added a GitHub Actions workflow file (`.github/workflows/sample-api.yaml`) to automate the CI/CD pipeline for the FastAPI application.
 
@@ -26,7 +27,7 @@
     - The matrix strategy is used to build the Docker image for both `linux/amd64` and `linux/arm64` platforms, ensuring compatibility across different environments.
 
 ### Added
-- **README Instructions**: Added detailed instructions in the `README.md` file on how to:
+- **README Instructions**: Added detailed instructions in the `instructions.md` file on how to:
 
   - Log in to the GitHub Container Registry (GHCR) from a local environment.
   - Pull and run the Docker image from GHCR.
@@ -36,3 +37,13 @@
 - **Poetry Configuration**: Updated the Dockerfile and workflow to ensure that Poetry installs dependencies in a non-root user's home directory, addressing potential permission issues during the build process.
 
   - **Why**: Running as a non-root user is a best practice in containerized environments, as it enhances security and avoids permission-related problems.
+
+### Question-3
+### Added a pdf with name Question-3
+- **Test Environment Setup Documentation**: Provided a detailed approach to setting up a test environment for the API in OpenShift, including database deployment, data migration, and resource management. This ensures the test environment closely mimics the production environment for accurate testing.
+  - **Why**: To establish a reliable and consistent test environment that reflects the production setup, facilitating thorough testing and validation.
+  - **What**:
+    - Instructions on duplicating the production database schema and migrating a representative subset of data.
+    - Steps for deploying the PostgreSQL database using Crunchy Postgres Operator in OpenShift.
+    - Guidelines for managing resources and persistent storage in the OpenShift test environment.
+
